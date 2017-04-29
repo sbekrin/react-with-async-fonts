@@ -1,0 +1,17 @@
+{
+    "extends": [
+        "tslint:recommended"
+    ],
+    "rules": {
+        "quotemark": [
+            "single"
+        ],
+        "interface-name": [
+            "never-prefix"
+        ],
+        "ordered-imports": [
+            false
+        ],
+        "object-literal-sort-keys": false
+    }
+}

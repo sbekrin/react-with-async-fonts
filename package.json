@@ -1,0 +1,45 @@
+{
+  "name": "react-with-async-fonts",
+  "version": "1.0.0",
+  "description": "React HoC to handle async loaded fonts",
+  "main": "./lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest --config=jest.json",
+    "lint": "tslint 'src/**/*.{ts,tsx}'"
+  },
+  "keywords": [
+    "react",
+    "fonts",
+    "async",
+    "webfont",
+    "fontloader",
+    "react-fonts"
+  ],
+  "author": "Sergey Bekrin <sergey@bekrin.me> (http://bekrin.me)",
+  "license": "MIT",
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "fontfaceobserver": "^2.0.9"
+  },
+  "peerDependencies": {
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0"
+  },
+  "devDependencies": {
+    "@types/core-js": "^0.9.41",
+    "@types/enzyme": "^2.7.9",
+    "@types/jest": "^19.2.2",
+    "@types/react": "^15.0.22",
+    "@types/react-dom": "^15.5.0",
+    "enzyme": "^2.8.2",
+    "jest": "^19.0.2",
+    "react": "^15.1.0",
+    "react-addons-test-utils": "^15.5.1",
+    "react-dom": "^15.1.0",
+    "react-test-renderer": "^15.5.4",
+    "ts-jest": "^19.0.14",
+    "tslint": "^5.1.0",
+    "typescript": "^2.2.2"
+  }
+}

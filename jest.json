@@ -1,0 +1,15 @@
+{
+    "verbose": true,
+    "collectCoverage": true,
+    "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js",
+        "json"
+    ],
+    "transform": {
+        "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "/.*\\.test\\.(ts|tsx)$",
+    "testResultsProcessor": "<rootDir>/node_modules/ts-jest/coverageprocessor.js"
+}
