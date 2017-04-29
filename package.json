@@ -1,14 +1,20 @@
 {
   "name": "react-with-async-fonts",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest --config=jest.json",
-    "lint": "tslint 'src/**/*.{ts,tsx}'"
+    "lint": "tslint 'src/**/*.{ts,tsx}'",
+    "prepublish": "npm run lint && npm run test && npm run build"
   },
+  "files": [
+    "lib/",
+    "src/",
+    "README.md"
+  ],
   "keywords": [
     "react",
     "fonts",
