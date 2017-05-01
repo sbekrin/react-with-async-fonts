@@ -7,7 +7,7 @@
   "scripts": {
     "build": "NODE_END=production tsc",
     "test": "NODE_ENV=test jest --coverage --config=jest.json --no-cache",
-    "coverage": "cat ./coverage/remapped/Lcov.info | coveralls",
+    "coverage": "cat ./coverage/remapped/lcov.info | coveralls",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
   "files": [
