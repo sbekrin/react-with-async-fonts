@@ -1,4 +1,6 @@
 # withAsyncFonts
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/sergeybekrin/react-with-async-fonts.svg)](https://greenkeeper.io/)
 Small and flexible module to work with fonts with css modules & css-in-js.
 This library provies simple HoC with injecting additional font props,
 which will be passed once font is loaded or use fallback values otherwise.
