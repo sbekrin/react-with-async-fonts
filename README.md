@@ -3,8 +3,9 @@ Small and flexible module to work with fonts with css modules & css-in-js.
 This library provies simple HoC with injecting additional font props,
 which will be passed once font is loaded or use fallback values otherwise.
 
-[![Build Status](https://travis-ci.org/sergeybekrin/react-with-async-fonts.svg?branch=master)](https://travis-ci.org/sergeybekrin/react-with-async-fonts)
-[![Coverage Status](https://coveralls.io/repos/github/sergeybekrin/react-with-async-fonts/badge.svg?branch=master)](https://coveralls.io/github/sergeybekrin/react-with-async-fonts?branch=master)
+[![npm Version](https://img.shields.io/npm/v/react-with-async-fonts.svg?maxAge=0)](https://www.npmjs.com/package/react-with-async-fonts)
+[![Build Status](https://img.shields.io/travis/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://travis-ci.org/sergeybekrin/react-with-async-fonts)
+[![Coverage Status](https://img.shields.io/coveralls/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://coveralls.io/github/sergeybekrin/react-with-async-fonts?branch=master)
 
 ## Basic usage
 ```javascript
