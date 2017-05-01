@@ -5,8 +5,10 @@
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
   "scripts": {
-    "build": "tsc",
-    "test": "jest --config=jest.json",
+    "build": "NODE_END=production tsc",
+    "test": "NODE_ENV=test jest --config=jest.json",
+    "precoveralls": "npm test",
+    "coveralls": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
   "files": [
@@ -38,8 +40,10 @@
     "@types/jest": "^19.2.2",
     "@types/react": "^15.0.22",
     "@types/react-dom": "^15.5.0",
+    "coveralls": "^2.13.1",
     "enzyme": "^2.8.2",
     "jest": "^19.0.2",
+    "nyc": "^10.3.0",
     "react": "^15.1.0",
     "react-addons-test-utils": "^15.5.1",
     "react-dom": "^15.1.0",
