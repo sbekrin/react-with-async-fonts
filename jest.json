@@ -1,6 +1,4 @@
 {
-    "verbose": true,
-    "collectCoverage": true,
     "moduleFileExtensions": [
         "ts",
         "tsx",
