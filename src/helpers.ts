@@ -1,4 +1,5 @@
 import * as FontFaceObserver from 'fontfaceobserver';
+import { Fonts, Font } from './types';
 
 /**
  * Creates new font observer based on font data

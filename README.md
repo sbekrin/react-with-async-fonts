@@ -11,49 +11,48 @@ which will be passed once font is loaded or use fallback values otherwise.
 import withAsyncFonts from 'react-with-async-fonts';
 
 // Required fonts object
-const fonts = {
-
-    // Font key will be prop with same name when passed to component
-    openSans300: {
-
-        // Only required field, should be same as in CSS
-        // Fonts can be loaded in any way (e.g. via link or @import)
-        family: 'Open Sans',
-
-        // Additional font props
-        weight: 'normal',
-        style: 'normal',
-        stretch: 'normal',
-
-        // Props for successfully loaded font
-        class: 'opensans-font',
-        styles: {
-            fontFamily: 'Open Sans, sans-serif',
-        },
-
-        // Props for timeouted or failed font, will be passed without
-        // `fallback` prefix
-        fallbackClass: 'system-font',
-        fallbackStyles: {
-            fontFamily: '"Comic Sans", cursive',
-        },
-
-        // You can also provide custom data which will be passed only
-        // for successfully loaded font
-        fooBar: 42,
-    },
-};
-
-// Optional options objects
 const options = {
+    fonts: {
 
-    // Callback for timeouted font
-    onTimeout(font) {},
+        // Font key will be prop with same name when passed to component
+        openSans300: {
 
-    // Callback for loaded font
-    onLoad(font) {},
+            // Only required field, should be same as in CSS
+            // Fonts can be loaded in any way (e.g. via link or @import)
+            family: 'Open Sans',
 
-    // Timeout, in ms
+            // Additional font props you can use
+            weight: 300,
+            style: 'normal',
+            stretch: 'normal',
+
+            // Props for successfully loaded font
+            class: 'opensans-font',
+            styles: {
+                fontFamily: 'Open Sans, sans-serif',
+            },
+
+            // Props for timeouted or failed font, will be passed without
+            // `fallback` prefix
+            fallbackClass: 'system-font',
+            fallbackStyles: {
+                fontFamily: '"Comic Sans", cursive',
+            },
+
+            // `timing` prop will be set for successfully loaded fonts only
+            timing: 100,
+
+            // You can also provide custom data which will be passed only
+            // for successfully loaded font
+            fooBar: 42,
+        },
+    },
+
+    // Optional callbacks for handling fonts status
+    onFontReady(font) {},
+    onFontTimeout(font) {},
+
+    // Optional timeout (5s by default), in ms
     timeout: 5000,
 };
 
@@ -67,7 +66,7 @@ const FooComponent = ({ openSans300 }) => (
     <div className={openSans300.class}>Hello world</div>
 );
 
-export default withAsyncFonts(FooComponent, fonts, options);
+export default withAsyncFonts(options)(FooComponent);
 ```
 
 ### With [React JSS](https://github.com/cssinjs/react-jss)
@@ -76,15 +75,17 @@ import React from 'react';
 import withAsyncFonts from 'react-with-async-fonts';
 import injectSheet from 'react-jss';
 
-// Fonts object with target fonts
-const fonts = {
-    openSansFont: {
-        family: 'Open Sans',
-        styles: {
-            fontFamily: 'Open Sans, sans-serif',
-        },
-        fallbackStyles: {
-            fontFamily: 'Helvetica, Arial, sans-serif',
+// Fonts options object
+const options = {
+    fonts: {
+        openSansFont: {
+            family: 'Open Sans',
+            styles: {
+                fontFamily: 'Open Sans, sans-serif',
+            },
+            fallbackStyles: {
+                fontFamily: 'Helvetica, Arial, sans-serif',
+            },
         },
     },
 };
@@ -104,7 +105,11 @@ const Heading = ({ classes, children }) => (
     </h1>
 );
 
-export default injectSheet(styles)(withAsyncFonts(Button, fonts));
+// You can compose those HoCs for sure :)
+const HeadingWithFonts = withAsyncFonts(options)(Heading);
+const HeadingWithStyles = injectSheet(styles)(HeadingWithFonts);
+
+export default HeadingWithStyles;
 ```
 
 ## License

@@ -1,3 +1,4 @@
+import { Font } from './types';
 import {
     load,
     dataWithLoadingFont,

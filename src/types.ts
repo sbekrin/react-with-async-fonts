@@ -1,4 +1,4 @@
-interface Font {
+export interface Font {
     family: string;
     weight?: 100 | 300 | 400 | 500 | 600 | 700 | 800 | 900 | 'normal' | 'bold';
     style?: 'italic' | 'normal' | 'oblique';
@@ -15,15 +15,17 @@ interface Font {
     fallbackStyles?: {};
     class?: string;
     fallbackClass?: string;
+    timing?: number;
     [custom: string]: any;
 }
 
-interface Fonts {
+export interface Fonts {
     [name: string]: Font;
 }
 
-interface Options {
+export interface FontsOptions {
+    fonts: Fonts;
     timeout?: number;
-    onLoad?: (font: Font) => void;
-    onTimeout?: (font: Font) => void;
+    onFontReady?: (font: Font) => void;
+    onFontTimeout?: (font: Font) => void;
 }

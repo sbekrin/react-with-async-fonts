@@ -2,6 +2,7 @@ import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import * as FontFaceObserver from 'fontfaceobserver';
 import withAsyncFonts from './index';
+import { Font } from './types';
 
 const wait = (delay: number) => new Promise(
     (resolve) => setTimeout(resolve, delay),
@@ -14,11 +15,13 @@ describe('withAsyncFonts()', () => {
                 <div className={props.fooFont300.class}>Foo</div>
             );
 
-            const HocComponent = withAsyncFonts(FooComponent, {
-                fooFont300: {
-                    family: 'Foo',
+            const HocComponent = withAsyncFonts({
+                fonts: {
+                    fooFont300: {
+                        family: 'Foo',
+                    },
                 },
-            });
+            })(FooComponent);
 
             expect(shallow(<HocComponent />).exists()).toBeTruthy();
         });
@@ -30,34 +33,41 @@ describe('withAsyncFonts()', () => {
                 }
             }
 
-            const HocComponent = withAsyncFonts(FooComponent, {
-                fooFont300: {
-                    family: 'Foo',
+            const HocComponent = withAsyncFonts({
+                fonts: {
+                    fooFont300: {
+                        family: 'Foo',
+                    },
                 },
-            });
+            })(FooComponent);
 
             expect(shallow(<HocComponent />).exists()).toBeTruthy();
         });
     });
 
     describe('when it succeeds to load a font', () => {
-        function createHoC(options = {}) {
-            const FooComponent = withAsyncFonts((props: { tnrFont300?: Font }) => (
-                <div
-                    style={props.tnrFont300.styles}
-                    className={props.tnrFont300.class}
-                >Foo</div>
-            ), {
-                tnrFont300: {
-                    family: 'Times New Roman',
-                    class: 'font-loaded',
-                    styles: {
-                        fontFamily: 'Times New Roman, serif',
+        function createHoC(testOptions = {}) {
+            const options = {
+                fonts: {
+                    tnrFont: {
+                        family: 'Times New Roman',
+                        class: 'font-loaded',
+                        styles: {
+                            fontFamily: 'Times New Roman, serif',
+                        },
                     },
                 },
-            }, options);
+                ...testOptions,
+            };
+            const Component = (props) => (
+                <div
+                    style={props.tnrFont.styles}
+                    className={props.tnrFont.class}
+                >Foo</div>
+            );
+            const HocComponent = withAsyncFonts(options)(Component);
 
-            return mount(<FooComponent />);
+            return mount(<HocComponent />);
         }
 
         it('should set full font prop data', async () => {
@@ -73,34 +83,49 @@ describe('withAsyncFonts()', () => {
             )).toBeTruthy();
         });
 
-        it('should call onLoad callback', async () => {
+        it('should call onLoad callback with font data', async () => {
             const loadedCallback = jest.fn();
             const target = createHoC({
-                onLoad: loadedCallback,
+                onFontReady: loadedCallback,
             });
 
             await wait(500);
-
-            expect(loadedCallback).toHaveBeenCalled();
+            expect(loadedCallback).toHaveBeenCalledWith({
+                family: 'Times New Roman',
+                weight: 'normal',
+                stretch: 'normal',
+                style: 'normal',
+                class: 'font-loaded',
+                styles: {
+                    fontFamily: 'Times New Roman, serif',
+                },
+                timing: expect.any(Number),
+            });
         });
     });
 
     describe('when it timeouts or fails to load a font', () => {
         function createHoC(options = {}) {
-            const FooComponent = withAsyncFonts((props: { barFont?: Font }) => (
-                <div
-                    className={props.barFont.class}
-                    style={props.barFont.styles}
-                >Foo</div>
-            ), {
-                barFont: {
-                    family: 'NON-EXISTING-FONT',
-                    fallbackClass: 'font-failed',
-                    fallbackStyles: {
-                        fontFamily: 'Arial, sans-serif',
+            const testOptions = {
+                fonts: {
+                    barFont: {
+                        family: 'NON-EXISTING-FONT',
+                        fallbackClass: 'font-failed',
+                        fallbackStyles: {
+                            fontFamily: 'Arial, sans-serif',
+                        },
                     },
                 },
-            }, options);
+                ...options,
+            };
+            const FooComponent = withAsyncFonts(testOptions)(
+                (props: { barFont?: Font }) => (
+                    <div
+                        className={props.barFont.class}
+                        style={props.barFont.styles}
+                    >Foo</div>
+                ),
+            );
 
             return mount(<FooComponent />);
         }
@@ -133,15 +158,21 @@ describe('withAsyncFonts()', () => {
             )).toBeTruthy();
         });
 
-        it('should call onTimeout callback', async () => {
+        it('should call onTimeout callback with font data', async () => {
             const timeoutCallbackSpy = jest.fn();
             const target = createHoC({
                 timeout: 100,
-                onTimeout: timeoutCallbackSpy,
+                onFontTimeout: timeoutCallbackSpy,
             });
 
             await wait(500);
-            expect(timeoutCallbackSpy).toHaveBeenCalled();
+            expect(timeoutCallbackSpy).toHaveBeenCalledWith({
+                family: 'NON-EXISTING-FONT',
+                fallbackClass: 'font-failed',
+                fallbackStyles: {
+                    fontFamily: 'Arial, sans-serif',
+                },
+            });
         });
     });
 });

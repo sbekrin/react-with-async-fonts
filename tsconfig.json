@@ -1,7 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "outDir": "./lib",
+        "moduleResolution": "node",
         "jsx": "react",
         "lib": [
             "dom",
@@ -10,6 +9,7 @@
     },
     "exclude": [
         "node_modules",
+        "lib",
         "**/*.test.ts",
         "**/*.test.tsx"
     ]

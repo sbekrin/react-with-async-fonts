@@ -1,5 +1,6 @@
 import 'core-js/fn/object/entries';
 import * as React from 'react';
+import { FontsOptions, Fonts } from './types';
 import {
     dataWithFailedFont,
     dataWithLoadedFont,
@@ -7,63 +8,80 @@ import {
     load,
 } from './helpers';
 
+type ReactComponent<T> = React.ComponentClass<T> | React.StatelessComponent<T>;
+
 /**
  * Wraps component with HoC and injects user-provided fonts props
- * @param BaseComponent - target component to hook
- * @param fonts - fonts object where key will become prop with font data
- * @param options - optional props to setup fonts
  */
-function withAsyncFonts<P>(
-    BaseComponent: React.ComponentClass<P> | React.StatelessComponent<P>,
-    fonts: Fonts,
-    options?: Options,
-): React.ComponentClass<P> {
-
-    // Keep original component name to use for display name
-    const originalName = BaseComponent.displayName || 'Component';
-
-    // Setup defaults with user-provided options
-    const optionsWithDefaults: Options = {
-        onLoad: (font) => null,
-        onTimeout: (font) => null,
+function withAsyncFonts<P>(userOptions: FontsOptions) {
+    const options: FontsOptions = {
         timeout: 5000,
-        ...options,
+        ...userOptions,
     };
 
-    return class WithAsyncFontsHoC extends React.Component<P, Fonts> {
-        public displayName = `WithAsyncFonts(${originalName})`;
+    return (BaseComponent: ReactComponent<P>): React.ComponentClass<P> => {
 
-        public render(): JSX.Element {
-            return React.createElement(
-                (BaseComponent as React.ComponentClass<{}>),
-                { ...(this.props as object), ...this.state },
-            );
-        }
+        // Keep original component name to use for display name
+        const originalName = BaseComponent.displayName || 'Component';
 
-        protected componentWillMount(): void {
+        return class WithAsyncFontsHoC extends React.Component<P, Fonts> {
+            public displayName = `WithAsyncFonts(${originalName})`;
 
-            // Set default state with base font values
-            Object.entries(fonts).forEach(([ code, font ]) => {
-                this.setState({ [code]: dataWithLoadingFont(font) });
-            });
-        }
+            public render(): JSX.Element {
+                return React.createElement(
+                    (BaseComponent as React.ComponentClass<{}>),
+                    { ...(this.props as object), ...this.state },
+                );
+            }
 
-        protected componentDidMount(): void {
-            const { onLoad, onTimeout, timeout } = optionsWithDefaults;
+            protected componentWillMount(): void {
 
-            // Iterate though all fonts and run individual observers
-            Object.entries(fonts).forEach(([ code, font ]) => {
-                load(font, timeout)
-                    .then(() => {
-                        this.setState({ [code]: dataWithLoadedFont(font) });
-                        onLoad(font);
-                    })
-                    .catch(() => {
-                        this.setState({ [code]: dataWithFailedFont(font) });
-                        onTimeout(font);
+                // Set default state with base font values
+                Object.entries(options.fonts).forEach(([ code, font ]) => {
+                    this.setState({
+                        [code]: dataWithLoadingFont(font),
                     });
-            });
-        }
+                });
+            }
+
+            protected componentDidMount(): void {
+                const {
+                    onFontReady,
+                    onFontTimeout,
+                    timeout,
+                } = options;
+
+                // Iterate though all fonts and run individual observers
+                Object.entries(options.fonts).forEach(([ code, font ]) => {
+                    const timing = Date.now();
+
+                    load(font, timeout)
+                        .then((resolvedFonts) => ({
+                            ...resolvedFonts,
+                            ...font,
+                            timing: Date.now() - timing,
+                        }))
+                        .then((resolvedFont) => {
+                            this.setState({
+                                [code]: dataWithLoadedFont(resolvedFont),
+                            });
+
+                            if (onFontReady) {
+                                onFontReady(resolvedFont);
+                            }
+                        })
+                        .catch(() => {
+                            this.setState({
+                                [code]: dataWithFailedFont(font),
+                            });
+
+                            if (onFontTimeout) {
+                                onFontTimeout(font);
+                            }
+                        });
+                });
+            }
+        };
     };
 }
 
