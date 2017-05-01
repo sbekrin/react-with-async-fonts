@@ -34,7 +34,10 @@ function withAsyncFonts<P>(
         public displayName = `WithAsyncFonts(${originalName})`;
 
         public render(): JSX.Element {
-            return <BaseComponent {...this.props} {...this.state} />;
+            return React.createElement(
+                (BaseComponent as React.ComponentClass<{}>),
+                { ...(this.props as object), ...this.state },
+            );
         }
 
         protected componentWillMount(): void {
