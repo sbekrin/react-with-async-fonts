@@ -67,7 +67,7 @@ const FooComponent = ({ openSans300 }) => (
     <div className={openSans300.class}>Hello world</div>
 );
 
-export default withAsyncFonts(FooComponent, fonts);
+export default withAsyncFonts(FooComponent, fonts, options);
 ```
 
 ### With [React JSS](https://github.com/cssinjs/react-jss)
