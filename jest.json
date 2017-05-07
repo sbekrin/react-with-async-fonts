@@ -1,4 +1,5 @@
 {
+    "mapCoverage": true,
     "moduleFileExtensions": [
         "ts",
         "tsx",
@@ -8,6 +9,5 @@
     "transform": {
         "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "/.*\\.test\\.(ts|tsx)$",
-    "testResultsProcessor": "<rootDir>/node_modules/ts-jest/coverageprocessor.js"
+    "testRegex": "/.*\\.test\\.(ts|tsx)$"
 }
