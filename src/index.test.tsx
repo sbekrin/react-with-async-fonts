@@ -2,7 +2,7 @@ import * as React from 'react';
 import { shallow, mount } from 'enzyme';
 import * as FontFaceObserver from 'fontfaceobserver';
 import withAsyncFonts from './index';
-import { Font } from './types';
+import { InputFont, Font, Fonts } from './types';
 
 const wait = (delay: number) => new Promise(
     (resolve) => setTimeout(resolve, delay),
@@ -11,15 +11,13 @@ const wait = (delay: number) => new Promise(
 describe('withAsyncFonts()', () => {
     describe('when it used with different component defenitions', () => {
         it('should work with functional components', () => {
-            const FooComponent = (props) => (
-                <div className={props.fooFont300.class}>Foo</div>
+            const FooComponent = ({ fooFont300 }) => (
+                <div className={fooFont300.class}>Foo</div>
             );
 
             const HocComponent = withAsyncFonts({
-                fonts: {
-                    fooFont300: {
-                        family: 'Foo',
-                    },
+                fooFont300: {
+                    family: 'Foo',
                 },
             })(FooComponent);
 
@@ -27,17 +25,15 @@ describe('withAsyncFonts()', () => {
         });
 
         it('should work with class components', () => {
-            class FooComponent extends React.Component<{ fooFont300?: Font }, void> {
+            class FooComponent extends React.Component<{ fooFont300: Font }, void> {
                 public render() {
                     return <div className={this.props.fooFont300.class}>Foo</div>;
                 }
             }
 
             const HocComponent = withAsyncFonts({
-                fonts: {
-                    fooFont300: {
-                        family: 'Foo',
-                    },
+                fooFont300: {
+                    family: 'Foo',
                 },
             })(FooComponent);
 
@@ -46,26 +42,27 @@ describe('withAsyncFonts()', () => {
     });
 
     describe('when it succeeds to load a font', () => {
-        function createHoC(testOptions = {}) {
-            const options = {
-                fonts: {
-                    tnrFont: {
-                        family: 'Times New Roman',
-                        class: 'font-loaded',
-                        styles: {
+        function createHoC(options = {}) {
+            const fonts: Fonts = {
+                tnrFont: {
+                    family: 'Times New Roman',
+                    class: {
+                        success: 'font-loaded',
+                    },
+                    styles: {
+                        success: {
                             fontFamily: 'Times New Roman, serif',
                         },
                     },
                 },
-                ...testOptions,
             };
-            const Component = (props) => (
+            const Component = ({ tnrFont }: { tnrFont: Font }) => (
                 <div
-                    style={props.tnrFont.styles}
-                    className={props.tnrFont.class}
+                    style={tnrFont.styles}
+                    className={tnrFont.class}
                 >Foo</div>
             );
-            const HocComponent = withAsyncFonts(options)(Component);
+            const HocComponent = withAsyncFonts(fonts, options)(Component);
 
             return mount(<HocComponent />);
         }
@@ -83,14 +80,14 @@ describe('withAsyncFonts()', () => {
             )).toBeTruthy();
         });
 
-        it('should call onLoad callback with font data', async () => {
-            const loadedCallback = jest.fn();
+        it('should call onFontReady callback with font data', async () => {
+            const loadedCallbackSpy = jest.fn();
             const target = createHoC({
-                onFontReady: loadedCallback,
+                onFontReady: loadedCallbackSpy,
             });
 
             await wait(500);
-            expect(loadedCallback).toHaveBeenCalledWith({
+            expect(loadedCallbackSpy).toHaveBeenCalledWith({
                 family: 'Times New Roman',
                 weight: 'normal',
                 stretch: 'normal',
@@ -106,20 +103,25 @@ describe('withAsyncFonts()', () => {
 
     describe('when it timeouts or fails to load a font', () => {
         function createHoC(options = {}) {
-            const testOptions = {
-                fonts: {
-                    barFont: {
-                        family: 'NON-EXISTING-FONT',
-                        fallbackClass: 'font-failed',
-                        fallbackStyles: {
+            const fonts: Fonts = {
+                barFont: {
+                    family: 'NON-EXISTING-FONT',
+                    class: {
+                        success: 'font-loaded',
+                        fallback: 'font-failed',
+                    },
+                    styles: {
+                        success: {
+                            fontFamily: 'Times New Roman, serif',
+                        },
+                        fallback: {
                             fontFamily: 'Arial, sans-serif',
                         },
                     },
                 },
-                ...options,
             };
-            const FooComponent = withAsyncFonts(testOptions)(
-                (props: { barFont?: Font }) => (
+            const FooComponent = withAsyncFonts(fonts, options)(
+                (props: { barFont: Font }) => (
                     <div
                         className={props.barFont.class}
                         style={props.barFont.styles}
@@ -135,7 +137,7 @@ describe('withAsyncFonts()', () => {
             // enviroment, so we need to force it to reject font from being
             // loaded
             jest.spyOn(FontFaceObserver.prototype, 'load').mockReturnValue(
-                new Promise((_, reject) => reject()),
+                Promise.reject(false),
             );
         });
 
@@ -158,7 +160,7 @@ describe('withAsyncFonts()', () => {
             )).toBeTruthy();
         });
 
-        it('should call onTimeout callback with font data', async () => {
+        it('should call onFontTimeout callback with font data', async () => {
             const timeoutCallbackSpy = jest.fn();
             const target = createHoC({
                 timeout: 100,
@@ -168,10 +170,11 @@ describe('withAsyncFonts()', () => {
             await wait(500);
             expect(timeoutCallbackSpy).toHaveBeenCalledWith({
                 family: 'NON-EXISTING-FONT',
-                fallbackClass: 'font-failed',
-                fallbackStyles: {
+                class: 'font-failed',
+                styles: {
                     fontFamily: 'Arial, sans-serif',
                 },
+                error: expect.any(Error),
             });
         });
     });

@@ -1,11 +1,11 @@
 import * as FontFaceObserver from 'fontfaceobserver';
-import { Fonts, Font } from './types';
+import { Fonts, Font, InputFont, InitialFont, LoadedFont, FallbackFont, FontWithTiming } from './types';
 
 /**
  * Creates new font observer based on font data
  * @param font - font data to observe
  */
-export function load(font: Font, timeout: number): Promise<Font> {
+export function load(font: InputFont, timeout: number): Promise<InputFont> {
     const { family, style, weight, stretch } = font;
     const observer = new FontFaceObserver(family, { style, weight, stretch });
     return observer.load(null, timeout);
@@ -14,24 +14,49 @@ export function load(font: Font, timeout: number): Promise<Font> {
 /**
  * Map font data for case when font is still waiting to be loaded
  */
-export function dataWithLoadingFont({ family, style, stretch, weight }: Font): Font {
-    return { family, style, stretch, weight };
+export function dataWithLoadingFont({
+    family, weight = 'normal', style = 'normal', stretch = 'normal',
+    class: cssClass, styles,
+}: InputFont): InitialFont {
+    return {
+        family,
+        weight,
+        style,
+        stretch,
+        class: cssClass && cssClass.initial || '',
+        styles: styles && styles.initial || {},
+    };
 }
 
 /**
  * Map font data for case when font is ready before timeout
  */
-export function dataWithLoadedFont({ fallbackClass, fallbackStyles, ...font }: Font): Font {
-    return { ...font };
+export function dataWithLoadedFont(font: InputFont | FontWithTiming): LoadedFont {
+    return {
+        ...font,
+        timing: font.timing || -1,
+        class: font.class && font.class.success || '',
+        styles: font.styles && font.styles.success || {},
+    };
 }
 
 /**
  * Map font data for case when font timeouted to load
  */
-export function dataWithFailedFont({ fallbackClass = '', fallbackStyles = {}, ...font }: Font): Font {
+export function dataWithFailedFont(font: InputFont): FallbackFont {
+    const cssClass = font.class && (
+        font.class.fallback ||
+        font.class.initial
+    ) || '';
+    const styles = font.styles && (
+        font.styles.fallback ||
+        font.styles.initial
+    ) || {};
+
     return {
         ...font,
-        class: fallbackClass,
-        styles: fallbackStyles,
+        class: cssClass,
+        styles,
+        error: font.error || new Error(),
     };
 }
