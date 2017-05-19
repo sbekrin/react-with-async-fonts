@@ -95,14 +95,7 @@ import injectSheet from 'react-jss';
 const fonts = {
     openSansFont: {
         family: 'Open Sans',
-        styles: {
-            initial: {
-                fontFamily: 'Helvetica, Arial, sans-serif',
-            },
-            success: {
-                fontFamily: 'Open Sans, sans-serif',
-            },
-        },
+        ready: true,
     },
 };
 
@@ -111,7 +104,11 @@ const styles = {
     heading: {
         color: 'purple',
         fontSize: 25,
-        fontFamily: props => props.openSansFont.styles.fontFamily,
+        fontFamily: ({ openSansFont }) => (
+            openSansFont.ready ?
+            'Open Sans, sans-serif' :
+            'Helvetica, Arial, sans-serif'
+        ),
     },
 };
 
