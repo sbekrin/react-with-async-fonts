@@ -36,7 +36,7 @@ function withAsyncFonts<P>(fonts: Fonts, userOptions?: Options) {
                 );
             }
 
-            protected componentWillMount(): void {
+            public componentWillMount(): void {
 
                 // Set default state with base font values
                 Object.entries(fonts).forEach(([ code, font ]) => {
@@ -46,7 +46,7 @@ function withAsyncFonts<P>(fonts: Fonts, userOptions?: Options) {
                 });
             }
 
-            protected componentDidMount(): void {
+            public componentDidMount(): void {
                 const {
                     onFontReady,
                     onFontTimeout,
