@@ -1,6 +1,6 @@
 {
   "name": "react-with-async-fonts",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
@@ -39,7 +39,7 @@
     "@types/core-js": "^0.9.41",
     "@types/enzyme": "^2.7.9",
     "@types/jest": "^19.2.2",
-    "@types/react": "^15.0.22",
+    "@types/react": "^15.0.25",
     "@types/react-dom": "^15.5.0",
     "coveralls": "^2.13.1",
     "enzyme": "^2.8.2",
