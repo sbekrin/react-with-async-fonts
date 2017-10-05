@@ -125,5 +125,43 @@ const HeadingWithStyles = injectSheet(styles)(HeadingWithFonts);
 export default HeadingWithStyles;
 ```
 
+### With [styled-components](https://www.styled-components.com/)
+```jsx
+import withAsyncFonts from 'react-with-async-fonts';
+import styled from 'styled-components';
+
+const fonts = {
+    openSansFont: {
+        family: 'Open Sans',
+        ready: true,
+        styles: {
+            initial: {
+                fontFamily: 'Arial, Helvetica, sans-serif',
+            },
+            success: {
+                fontFamily: 'Open Sans, sans-serif',
+            },
+            fallback: {
+                // `initial` will be used instead if not set
+                fontFamily: '"Comic Sans", cursive',
+            },
+        },
+    },
+};
+
+const Button = styled.button`
+    font-family: ${props => props.openSansFont.styles.fontFamily};
+    visibility: ${props => (props.openSansFont.ready ? 'visible' : 'hidden')};
+    border-radius: 3px;
+    padding: 0.25em 1em;
+    margin: 0 1em;
+    background: transparent;
+    color: palevioletred;
+    border: 2px solid palevioletred;
+`;
+
+export default withAsyncFonts(fonts)(Button);
+
+```
 ## License
 MIT
