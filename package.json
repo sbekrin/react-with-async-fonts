@@ -1,6 +1,6 @@
 {
   "name": "react-with-async-fonts",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
@@ -13,7 +13,11 @@
     "coverage": "cat ./coverage/remapped/lcov.info | coveralls",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
-  "files": ["lib/", "src/", "README.md"],
+  "files": [
+    "lib/",
+    "src/",
+    "README.md"
+  ],
   "keywords": [
     "react",
     "fonts",
@@ -49,13 +53,23 @@
     "typescript": "^2.5.3"
   },
   "jest": {
-    "setupFiles": ["./jest.setup.js"],
+    "setupFiles": [
+      "./jest.setup.js"
+    ],
     "mapCoverage": true,
-    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ],
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "src/.*\\.spec\\.(ts|tsx)$",
-    "collectCoverageFrom": ["src/helpers.ts", "src/index.tsx"]
+    "collectCoverageFrom": [
+      "src/helpers.ts",
+      "src/index.tsx"
+    ]
   }
 }
