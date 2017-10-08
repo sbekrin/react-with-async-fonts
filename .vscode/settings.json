@@ -1,0 +1,4 @@
+{
+  "prettier.typescriptEnable": ["typescript", "typescriptreact"],
+  "editor.formatOnSave": true
+}

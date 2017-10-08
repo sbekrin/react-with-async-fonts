@@ -1,16 +1,8 @@
 {
-    "compilerOptions": {
-        "moduleResolution": "node",
-        "jsx": "react",
-        "lib": [
-            "dom",
-            "es2017"
-        ]
-    },
-    "exclude": [
-        "node_modules",
-        "lib",
-        "**/*.test.ts",
-        "**/*.test.tsx"
-    ]
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "jsx": "react",
+    "lib": ["dom", "es2017"]
+  },
+  "exclude": ["node_modules", "lib"]
 }

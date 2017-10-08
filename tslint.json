@@ -1,17 +1,10 @@
 {
-    "extends": [
-        "tslint:recommended"
-    ],
-    "rules": {
-        "quotemark": [
-            "single"
-        ],
-        "interface-name": [
-            "never-prefix"
-        ],
-        "ordered-imports": [
-            false
-        ],
-        "object-literal-sort-keys": false
-    }
+  "extends": ["tslint:recommended"],
+  "rules": {
+    "quotemark": [true, "single", "jsx-double"],
+    "interface-name": [true, "never-prefix"],
+    "ordered-imports": false,
+    "object-literal-sort-keys": false,
+    "arrow-parens": false
+  }
 }

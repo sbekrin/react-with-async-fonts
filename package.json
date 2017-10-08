@@ -8,15 +8,12 @@
   "scripts": {
     "build": "tsc --module commonjs --outDir ./lib",
     "typings": "tsc --declaration --module system --outFile ./lib/index.js",
-    "test": "jest --coverage --config=jest.json --no-cache",
+    "jest": "jest --coverage --no-cache",
+    "test": "npm run lint && npm run typings && npm run jest",
     "coverage": "cat ./coverage/remapped/lcov.info | coveralls",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
-  "files": [
-    "lib/",
-    "src/",
-    "README.md"
-  ],
+  "files": ["lib/", "src/", "README.md"],
   "keywords": [
     "react",
     "fonts",
@@ -28,28 +25,37 @@
   "author": "Sergey Bekrin <sergey@bekrin.me> (http://bekrin.me)",
   "license": "MIT",
   "dependencies": {
-    "core-js": "^2.4.1",
-    "fontfaceobserver": "^2.0.9"
+    "fontfaceobserver": "^2.0.13",
+    "make-cancelable": "^1.0.0"
   },
   "peerDependencies": {
     "react": "^15.1.0",
     "react-dom": "^15.1.0"
   },
   "devDependencies": {
-    "@types/core-js": "^0.9.41",
-    "@types/enzyme": "^2.8.5",
-    "@types/jest": "^21.1.0",
-    "@types/react": "^16.0.0",
-    "@types/react-dom": "^16.0.0",
+    "@types/jest": "^21.1.2",
+    "@types/react": "^16.0.10",
+    "@types/react-dom": "^16.0.1",
     "coveralls": "^3.0.0",
-    "enzyme": "^2.8.2",
-    "jest": "^21.0.0",
-    "react": "^15.1.0",
-    "react-addons-test-utils": "^15.5.1",
-    "react-dom": "^15.1.0",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.1",
+    "jest": "^21.2.1",
+    "react": "^16.0.0",
+    "react-addons-test-utils": "^15.6.2",
+    "react-dom": "^16.0.0",
     "react-test-renderer": "^16.0.0",
-    "ts-jest": "^21.0.0",
-    "tslint": "^5.1.0",
-    "typescript": "^2.2.2"
+    "ts-jest": "^21.1.0",
+    "tslint": "^5.7.0",
+    "typescript": "^2.5.3"
+  },
+  "jest": {
+    "setupFiles": ["./jest.setup.js"],
+    "mapCoverage": true,
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "src/.*\\.spec\\.(ts|tsx)$",
+    "collectCoverageFrom": ["src/helpers.ts", "src/index.tsx"]
   }
 }
