@@ -60,5 +60,5 @@ interface Options {
 }
 
 type CancelablePromise<T> = Promise<T> & {
-  cancel: () => void;
+  cancel?: () => void;
 };

@@ -1,5 +1,5 @@
 import * as FontFaceObserver from 'fontfaceobserver';
-import * as makeCancelable from 'make-cancelable';
+import makeCancelable from './make-cancelable';
 
 /**
  * Creates new font observer based on font data

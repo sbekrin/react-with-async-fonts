@@ -7,6 +7,7 @@
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc --module commonjs --outDir ./lib",
+    "prepublish": "rm -rf lib/ && npm test && npm run build",
     "typings": "tsc --declaration --module system --outFile ./lib/index.js",
     "jest": "jest --coverage --no-cache",
     "test": "npm run lint && npm run typings && npm run jest",
@@ -29,8 +30,7 @@
   "author": "Sergey Bekrin <sergey@bekrin.me> (http://bekrin.me)",
   "license": "MIT",
   "dependencies": {
-    "fontfaceobserver": "^2.0.13",
-    "make-cancelable": "^1.0.0"
+    "fontfaceobserver": "^2.0.13"
   },
   "peerDependencies": {
     "react": "^15.1.0",
@@ -68,8 +68,8 @@
     },
     "testRegex": "src/.*\\.spec\\.(ts|tsx)$",
     "collectCoverageFrom": [
-      "src/helpers.ts",
-      "src/index.tsx"
+      "src/**/*",
+      "!src/**/*.spec.*"
     ]
   }
 }
