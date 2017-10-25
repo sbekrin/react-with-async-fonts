@@ -4,21 +4,17 @@
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "types": "./src/index.tsx",
   "scripts": {
-    "build": "tsc --module commonjs --outDir ./lib",
-    "prepublish": "rm -rf lib/ && npm test && npm run build",
-    "typings": "tsc --declaration --module system --outFile ./lib/index.js",
+    "prebuild": "rimraf lib/",
+    "build": "tsc --target es5 --module umd --outDir ./lib",
+    "prepublish": "npm test && npm run build",
     "jest": "jest --coverage --no-cache",
-    "test": "npm run lint && npm run typings && npm run jest",
+    "test": "npm run lint && npm run jest",
     "coverage": "cat ./coverage/remapped/lcov.info | coveralls",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
-  "files": [
-    "lib/",
-    "src/",
-    "README.md"
-  ],
+  "files": ["lib/", "src/", "README.md"],
   "keywords": [
     "react",
     "fonts",
@@ -48,28 +44,19 @@
     "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.0.0",
     "react-test-renderer": "^16.0.0",
+    "rimraf": "^2.6.2",
     "ts-jest": "^21.1.0",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3"
   },
   "jest": {
-    "setupFiles": [
-      "./jest.setup.js"
-    ],
+    "setupFiles": ["./.jest.js"],
     "mapCoverage": true,
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "src/.*\\.spec\\.(ts|tsx)$",
-    "collectCoverageFrom": [
-      "src/**/*",
-      "!src/**/*.spec.*"
-    ]
+    "collectCoverageFrom": ["src/**/*", "!src/**/*.spec.*"]
   }
 }
