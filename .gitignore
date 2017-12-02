@@ -1,5 +1,7 @@
 node_modules/
 lib/
 coverage/
+dist/
+.vscode/
 .DS_Store
-*.log
+*.log*
