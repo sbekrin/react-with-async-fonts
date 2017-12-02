@@ -3,23 +3,20 @@
   "version": "3.1.0",
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
-  "main": "./lib/commonjs/index.js",
-  "types": "./src/index.tsx",
+  "main": "./lib/index.js",
+  "module": "./dist/index.js",
   "scripts": {
-    "prebuild": "rimraf lib/",
-    "build": "tsc --target es5 --module commonjs --outDir ./lib/commonjs",
-    "build-umd": "tsc --target es5 --module umd --outDir ./lib/umd",
+    "prebuild": "rimraf lib/ dist/",
+    "build": "npm run build:commonjs && npm run build:es",
+    "build:commonjs": "tsc --target es5 --module umd --outDir ./lib",
+    "build:es": "tsc --target es6 --module es6 --outDir ./dist",
     "prepublish": "npm test && npm run build",
     "jest": "jest --coverage --no-cache",
     "test": "npm run lint && npm run jest",
     "coverage": "cat ./coverage/remapped/lcov.info | coveralls",
     "lint": "tslint 'src/**/*.{ts,tsx}'"
   },
-  "files": [
-    "lib/",
-    "src/",
-    "README.md"
-  ],
+  "files": ["lib/", "dist/", "README.md"],
   "keywords": [
     "react",
     "fonts",
@@ -34,8 +31,8 @@
     "fontfaceobserver": "^2.0.13"
   },
   "peerDependencies": {
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0"
+    "react": "^15.0.0 || ^16.0.0",
+    "react-dom": "^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
     "@types/jest": "^21.1.2",
@@ -55,23 +52,17 @@
     "typescript": "^2.5.3"
   },
   "jest": {
-    "setupFiles": [
-      "./.jest.js"
-    ],
+    "setupFiles": ["./.jest.js"],
     "mapCoverage": true,
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "json"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js", "json"],
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "src/.*\\.spec\\.(ts|tsx)$",
-    "collectCoverageFrom": [
-      "src/**/*",
-      "!src/**/*.spec.*"
-    ]
+    "collectCoverageFrom": ["src/**/*", "!src/**/*.spec.*"]
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true
   }
 }
