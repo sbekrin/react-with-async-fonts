@@ -1,5 +1,6 @@
 /// <reference path="../types.d.ts" />
 import * as React from 'react';
+import hoistNonReactStatic from 'hoist-non-react-statics';
 import {
   dataWithFailedFont,
   dataWithLoadedFont,
@@ -20,7 +21,7 @@ function withAsyncFonts<P>(
   userOptions?: Options,
 ): (
   BaseComponent: React.ComponentType<P & State>,
-) => React.ComponentClass<P & State> {
+) => React.ComponentType<P & State> {
   const options: Options = {
     onFontTimeout: noop,
     onFontReady: noop,
@@ -32,7 +33,7 @@ function withAsyncFonts<P>(
     const originalName =
       BaseComponent.displayName || BaseComponent.name || 'Component';
 
-    return class WithAsyncFonts extends React.Component<P & State, State> {
+    class WithAsyncFonts extends React.Component<P & State, State> {
       public static displayName = `withAsyncFonts(${originalName})`;
 
       private promises: Array<CancelablePromise<InputFont>> = [];
@@ -95,7 +96,9 @@ function withAsyncFonts<P>(
       public render() {
         return <BaseComponent {...this.props} {...this.state} />;
       }
-    };
+    }
+
+    return hoistNonReactStatic<P & State, P>(WithAsyncFonts, BaseComponent);
   };
 }
 

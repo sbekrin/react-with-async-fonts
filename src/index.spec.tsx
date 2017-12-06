@@ -1,5 +1,6 @@
+/* tslint:disable max-classes-per-file */
 import * as React from 'react';
-import * as FontFaceObserver from 'fontfaceobserver';
+import FontFaceObserver from 'fontfaceobserver';
 import { shallow, mount } from 'enzyme';
 import withAsyncFonts from './index';
 
@@ -7,7 +8,7 @@ const wait = (delay: number) =>
   new Promise(resolve => setTimeout(resolve, delay));
 
 describe('withAsyncFonts()', () => {
-  describe('when it used with different component defenitions', () => {
+  describe('when it used with different component definitions', () => {
     it('should work with functional components', () => {
       const FooComponent = withAsyncFonts({
         fooFont300: { family: 'Foo' },
@@ -30,6 +31,21 @@ describe('withAsyncFonts()', () => {
       );
 
       expect(shallow(<FooComponent />).exists()).toBeTruthy();
+    });
+
+    it('should hoist statics', () => {
+      const Sample: any = props => (
+        <div className={this.props.fooFont300.class}>Foo</div>
+      );
+      Sample.bar = 42;
+
+      const FooComponent: any = withAsyncFonts({
+        fooFont300: {
+          family: 'Foo',
+        },
+      })(Sample);
+
+      expect(FooComponent.bar).toEqual(42);
     });
   });
 
