@@ -2,7 +2,8 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "jsx": "react",
-    "lib": ["dom", "es2017"]
+    "lib": ["dom", "es2017"],
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules", "lib", "dist"]
 }

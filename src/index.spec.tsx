@@ -7,7 +7,7 @@ const wait = (delay: number) =>
   new Promise(resolve => setTimeout(resolve, delay));
 
 describe('withAsyncFonts()', () => {
-  describe('when it used with different component defenitions', () => {
+  describe('when it used with different component definitions', () => {
     it('should work with functional components', () => {
       const FooComponent = withAsyncFonts({
         fooFont300: { family: 'Foo' },
@@ -30,6 +30,23 @@ describe('withAsyncFonts()', () => {
       );
 
       expect(shallow(<FooComponent />).exists()).toBeTruthy();
+    });
+    it('should work with static method inside class components', () => {
+      const FooComponent = withAsyncFonts({
+        fooFont300: {
+          family: 'Foo',
+        },
+      })(
+        class extends React.Component<any> {
+          public static Foo: Function;
+
+          public render() {
+            return <div className={this.props.fooFont300.class}>Foo</div>;
+          }
+        },
+      );
+
+      expect(shallow(<FooComponent.Foo />).exists()).toBeTruthy();
     });
   });
 
