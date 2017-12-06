@@ -1,6 +1,6 @@
 {
   "name": "react-with-async-fonts",
-  "version": "3.1.2",
+  "version": "3.2.0",
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
@@ -32,7 +32,8 @@
   "author": "Sergey Bekrin <sergey@bekrin.me> (http://bekrin.me)",
   "license": "MIT",
   "dependencies": {
-    "fontfaceobserver": "^2.0.13"
+    "fontfaceobserver": "^2.0.13",
+    "hoist-non-react-statics": "^2.3.1"
   },
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0",
