@@ -21,7 +21,7 @@ function withAsyncFonts<P>(
   userOptions?: Options,
 ): (
   BaseComponent: React.ComponentType<P & State>,
-) => React.ComponentClass<P & State> {
+) => React.ComponentType<P & State> {
   const options: Options = {
     onFontTimeout: noop,
     onFontReady: noop,
@@ -96,11 +96,9 @@ function withAsyncFonts<P>(
       public render() {
         return <BaseComponent {...this.props} {...this.state} />;
       }
-    };
+    }
 
-    hoistNonReactStatic(WithAsyncFonts, BaseComponent);
-
-    return WithAsyncFonts;
+    return hoistNonReactStatic<P & State, P>(WithAsyncFonts, BaseComponent);
   };
 }
 

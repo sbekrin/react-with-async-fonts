@@ -1,4 +1,4 @@
-import * as FontFaceObserver from 'fontfaceobserver';
+import FontFaceObserver from 'fontfaceobserver';
 import makeCancelable from './make-cancelable';
 
 /**

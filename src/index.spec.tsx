@@ -1,5 +1,6 @@
+/* tslint:disable max-classes-per-file */
 import * as React from 'react';
-import * as FontFaceObserver from 'fontfaceobserver';
+import FontFaceObserver from 'fontfaceobserver';
 import { shallow, mount } from 'enzyme';
 import withAsyncFonts from './index';
 
@@ -31,22 +32,20 @@ describe('withAsyncFonts()', () => {
 
       expect(shallow(<FooComponent />).exists()).toBeTruthy();
     });
-    it('should work with static method inside class components', () => {
-      const FooComponent = withAsyncFonts({
+
+    it('should hoist statics', () => {
+      const Sample: any = props => (
+        <div className={this.props.fooFont300.class}>Foo</div>
+      );
+      Sample.bar = 42;
+
+      const FooComponent: any = withAsyncFonts({
         fooFont300: {
           family: 'Foo',
         },
-      })(
-        class extends React.Component<any> {
-          public static Foo: Function;
+      })(Sample);
 
-          public render() {
-            return <div className={this.props.fooFont300.class}>Foo</div>;
-          }
-        },
-      );
-
-      expect(shallow(<FooComponent.Foo />).exists()).toBeTruthy();
+      expect(FooComponent.bar).toEqual(42);
     });
   });
 
