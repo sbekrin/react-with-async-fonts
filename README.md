@@ -1,167 +1,221 @@
-# withAsyncFonts
-[![npm Version](https://img.shields.io/npm/v/react-with-async-fonts.svg?maxAge=0)](https://www.npmjs.com/package/react-with-async-fonts) [![Build Status](https://img.shields.io/travis/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://travis-ci.org/sergeybekrin/react-with-async-fonts) [![Coverage Status](https://img.shields.io/coveralls/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://coveralls.io/github/sergeybekrin/react-with-async-fonts?branch=master) [![dependencies Status](https://img.shields.io/david/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://david-dm.org/sergeybekrin/react-with-async-fonts) [![devDependencies Status](https://img.shields.io/david/dev/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://david-dm.org/sergeybekrin/react-with-async-fonts?type=dev)
+# react-with-async-fonts
 
-This is small and flexible module for managing custom loaded fonts. It's designed
-to work with css modules & css-in-js tools out of the box.
+[![npm Version](https://img.shields.io/npm/v/react-with-async-fonts.svg?maxAge=0)](https://www.npmjs.com/package/react-with-async-fonts)
+[![Build Status](https://img.shields.io/travis/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://travis-ci.org/sergeybekrin/react-with-async-fonts)
+[![Coverage Status](https://img.shields.io/coveralls/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://coveralls.io/github/sergeybekrin/react-with-async-fonts?branch=master)
+[![dependencies Status](https://img.shields.io/david/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://david-dm.org/sergeybekrin/react-with-async-fonts)
+[![devDependencies Status](https://img.shields.io/david/dev/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://david-dm.org/sergeybekrin/react-with-async-fonts?type=dev)
 
-```jsx
-import withAsyncFonts from 'react-with-async-fonts';
+> Note: version 4.x introduces breaking changes with new API. It addresses bunch
+> of issues, including canceling promises, better performance, and TS typings.
 
-const openSansFont = {
-    family: 'Open Sans',
-    class: {
-        initial: 'system-font',
-        success: 'opensans-font',
-    },
-};
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
 
-export default withAsyncFonts({ openSansFont })(({ openSansFont }) => (
-    <h1 className={openSansFont.class}>Hello!</h1>
-));
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+* [Quick Start](#quick-start)
+* [API](#api)
+  * [`FontObserver` component](#fontobserver-component)
+  * [`FontSubscriber` component](#fontsubscriber-component)
+  * [`withFonts` HoC](#withfonts-hoc)
+  * [`Font` type](#font-type)
+* [Examples](#examples)
+  * [Basic with `FontSubscriber`](#basic-with-fontsubscriber)
+  * [Basic with `withFonts`](#basic-with-withfonts)
+  * [With `styled-components`](#with-styled-components)
+* [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
+## Quick Start
+
+1. Install `react-with-async-fonts`:
+
+npm:
+
+```bash
+npm install --save react-with-async-fonts
 ```
 
-## Full Usage
-### With basic `className`
-```jsx
-import withAsyncFonts from 'react-with-async-fonts';
+yarn:
 
-// Required fonts object
-const fonts = {
+```bash
+yarn add react-with-async-fonts
+```
 
-    // Font key will be prop with same name when passed to component
-    openSans300: {
+2. Wrap your root component with `FontObserver`:
 
-        // Only required field, should be same as in CSS
-        // Fonts can be loaded in any way (e.g. via link or @import)
-        family: 'Open Sans',
+Set prop with font name. You can access it later in `FontSubscriber` to check if
+it's ready.
 
-        // Additional font props you can use
-        weight: 300,
-        style: 'normal',
-        stretch: 'normal',
+```js
+import { FontObserver } from 'react-with-async-fonts';
+import { render } from 'react-dom';
+import App from './app';
 
-        // Class prop for using via `className`
-        class: {
-            initial: 'system-font',
-            success: 'opensans-font',
-            // `initial` will be used instead if not set
-            fallback: 'system-font',
-        },
-        styles: {
-            initial: {
-                fontFamily: 'Arial, Helvetica, sans-serif',
-            },
-            success: {
-                fontFamily: 'Open Sans, sans-serif',
-            },
-            fallback: {
-                // `initial` will be used instead if not set
-                fontFamily: '"Comic Sans", cursive',
-            },
-        },
-
-        // `timing` prop will be set for successfully loaded fonts only
-        timing: 100,
-
-        // You can also provide custom data which will be passed only
-        // for successfully loaded font
-        fooBar: 42,
-    },
-};
-
-const options = {
-
-    // Optional callbacks for handling fonts status
-    onFontReady(font) {},
-    onFontTimeout(font) {},
-
-    // Optional timeout (5s by default), in ms
-    timeout: 5000,
-};
-
-const FooComponent = ({ openSans300 }) => (
-    <div className={openSans300.class}>Hello world</div>
+render(
+  <FontObserver openSans="Open Sans">
+    <App />
+  </FontObserver>,
+  document.getElementById('root'),
 );
-
-export default withAsyncFonts(fonts, options)(FooComponent);
 ```
 
-### With [React JSS](https://github.com/cssinjs/react-jss)
-```jsx
-import React from 'react';
-import withAsyncFonts from 'react-with-async-fonts';
-import injectSheet from 'react-jss';
+3. Wrap your target with `FontSubscriber` component:
 
-const fonts = {
-    openSansFont: {
-        family: 'Open Sans',
-        ready: true,
-    },
-};
+> Tip: you can also use [`withFonts` API](#withFonts) if you're really into
+> HoCs.
 
-// Styles with dynamic `fontFamily` prop
-const styles = {
-    heading: {
-        color: 'purple',
-        fontSize: 25,
-        fontFamily: ({ openSansFont }) => (
-            openSansFont.ready ?
-            'Open Sans, sans-serif' :
-            'Helvetica, Arial, sans-serif'
-        ),
-    },
-};
+Note that `FontSubscriber` uses children render prop. Provided function would be
+called with single argument which is an object with loaded font keys.
 
-const Heading = ({ classes, children }) => (
-    <h1 className={classes.heading}>
+```js
+import { FontSubscriber } from 'react-with-async-fonts';
+
+const Heading = ({ children }) => (
+  <FontSubscriber>
+    {fonts => (
+      <h1 className={fonts.openSans ? 'opens-sans-font' : 'system-font'}>
         {children}
-    </h1>
+      </h1>
+    )}
+  </FontSubscriber>
 );
 
-// You can compose those HoCs for sure
-const HeadingWithFonts = withAsyncFonts(fonts)(Heading);
-const HeadingWithStyles = injectSheet(styles)(HeadingWithFonts);
-
-export default HeadingWithStyles;
+export default Heading;
 ```
 
-### With [styled-components](https://www.styled-components.com/)
-```jsx
-import withAsyncFonts from 'react-with-async-fonts';
-import styled from 'styled-components';
+## API
 
-const fonts = {
-    openSansFont: {
-        family: 'Open Sans',
-        ready: true,
-        styles: {
-            initial: {
-                fontFamily: 'Arial, Helvetica, sans-serif',
-            },
-            success: {
-                fontFamily: 'Open Sans, sans-serif',
-            },
-            fallback: {
-                // `initial` will be used instead if not set
-                fontFamily: '"Comic Sans", cursive',
-            },
-        },
-    },
+### `FontObserver` component
+
+```js
+import { FontObserver } from 'react-with-async-fonts';
+```
+
+| Prop    | Type            | Description                                          |
+| ------- | --------------- | ---------------------------------------------------- |
+| `[key]` | `Font | string` | Font family string or a [`Font` object](#font-type). |
+
+### `FontSubscriber` component
+
+```js
+import { FontSubscriber } from 'react-with-async-fonts';
+```
+
+| Prop       | Type                                    | Description                                                                                                                  |
+| ---------- | --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `children` | `(fonts: Object) => React.Element<any>` | Children render function. Accepts object with loaded font. Once ready, it would contain object of [`Font` type](#font-type). |
+
+### `withFonts` HoC
+
+```js
+import { withFonts } from 'react-with-async-fonts';
+```
+
+| Argument  | Type                       | Description                                         |
+| --------- | -------------------------- | --------------------------------------------------- |
+| component | `React.ComponentType<any>` | Component to wrap with HoC. Injects `fonts` object. |
+
+### `Font` type
+
+```js
+type Font = {
+  family: String,
+  weight?:
+    | 'normal'
+    | 'bold'
+    | 'bolder'
+    | 'lighter'
+    | '100'
+    | '200'
+    | '300'
+    | '400'
+    | '500'
+    | '600'
+    | '700'
+    | '800'
+    | '900',
+  style?: 'normal' | 'italic' | 'oblique',
+  stretch?:
+    | 'normal'
+    | 'ultra-condensed'
+    | 'extra-condensed'
+    | 'condensed'
+    | 'semi-condensed'
+    | 'semi-expanded'
+    | 'expanded'
+    | 'extra-expanded'
+    | 'ultra-expanded',
 };
+```
 
-const Button = styled.button`
-    font-family: ${props => props.openSansFont.styles.fontFamily};
-    visibility: ${props => (props.openSansFont.ready ? 'visible' : 'hidden')};
-    border-radius: 3px;
-    padding: 0.25em 1em;
-    margin: 0 1em;
-    background: transparent;
-    color: palevioletred;
-    border: 2px solid palevioletred;
+## Examples
+
+Heads up! Each example requires wrapping your app with
+[`FontObserver`](#fontobserver-component):
+
+```js
+import React from 'react';
+import { render } from 'react-dom';
+import { FontObserver } from 'react-with-async-fonts';
+import App from './app';
+
+render(
+  <FontObserver montserrat="Montserrat">
+    <App />
+  </FontObserver>,
+  document.getElementById('root'),
+);
+```
+
+### Basic with `FontSubscriber`
+
+```js
+import React from 'react';
+import { FontSubscriber } from 'react-with-async-fonts';
+
+const Heading = ({ children }) => (
+  <FontSubscriber>
+    {fonts => (
+      <h1 className={fonts.montserrat && 'montserrat-font'}>{children}</h1>
+    )}
+  </FontSubscriber>
+);
+
+export default Heading;
+```
+
+### Basic with `withFonts`
+
+```js
+import React from 'react';
+import { withFonts } from 'react-with-async-fonts';
+
+const Heading = ({ children, fonts }) => (
+  <h1 className={fonts.montserrat && 'montserrat-font'}>{children}</h1>
+);
+
+export default withFonts(Heading);
+```
+
+### With `styled-components`
+
+```js
+import styled from 'styled-components';
+import { withFonts } from 'react-with-async-fonts';
+
+const Heading = styled.h2`
+  font-weight: 300;
+  font-family: ${props =>
+    props.fonts.montserrat
+      ? '"Open Sans", sans-serif'
+      : 'Helvetica, sans-serif'};
 `;
 
-export default withAsyncFonts(fonts)(Button);
-
+export default withFonts(Heading);
 ```
+
 ## License
-MIT
+
+MIT &copy; [Sergey Bekrin](http://bekrin.me)

@@ -1,25 +1,26 @@
 {
   "name": "react-with-async-fonts",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "React HoC to handle async loaded fonts",
   "repository": "https://github.com/sergeybekrin/react-with-async-fonts",
   "main": "./lib/index.js",
   "module": "./dist/index.js",
   "scripts": {
+    "precommit": "lint-staged",
     "prebuild": "rimraf lib/ dist/",
-    "build": "npm run build:commonjs && npm run build:es",
-    "build:commonjs": "tsc --target es5 --module commonjs --outDir ./lib",
-    "build:es": "tsc --target es6 --module es6 --outDir ./dist",
+    "build": "npm run build:cjs && npm run build:esm",
+    "build:cjs": "tsc -d -t es5 -m commonjs --outDir ./lib",
+    "build:esm": "tsc -d -t es6 -m es6 --outDir ./dist",
     "prepublishOnly": "npm test && npm run build",
     "jest": "jest --coverage --no-cache",
     "test": "npm run lint && npm run jest",
     "coverage": "cat ./coverage/remapped/lcov.info | coveralls",
-    "lint": "tslint 'src/**/*.{ts,tsx}'"
+    "lint": "tslint src/**/*.{ts,tsx}"
   },
   "files": [
     "lib/",
     "dist/",
-    "README.md"
+    "readme.md"
   ],
   "keywords": [
     "react",
@@ -33,27 +34,32 @@
   "license": "MIT",
   "dependencies": {
     "fontfaceobserver": "^2.0.13",
-    "hoist-non-react-statics": "^2.3.1"
+    "hoist-non-react-statics": "^2.3.1",
+    "invariant": "^2.2.2",
+    "p-cancelable": "^0.3.0"
   },
   "peerDependencies": {
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^21.1.2",
-    "@types/react": "^16.0.10",
-    "@types/react-dom": "^16.0.1",
+    "@types/react": "^16.0.36",
     "coveralls": "^3.0.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
-    "jest": "^21.2.1",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-test-renderer": "^16.0.0",
+    "doctoc": "^1.3.0",
+    "enzyme": "^3.3.0",
+    "enzyme-adapter-react-16": "^1.1.1",
+    "husky": "^0.14.3",
+    "jest": "^22.1.4",
+    "lint-staged": "^6.1.0",
+    "prettier": "^1.10.2",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-test-renderer": "^16.2.0",
     "rimraf": "^2.6.2",
-    "ts-jest": "^21.1.0",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.3"
+    "ts-jest": "^22.0.3",
+    "tslint": "^5.9.1",
+    "typescript": "^2.7.1"
   },
   "jest": {
     "setupFiles": [
@@ -61,15 +67,17 @@
     ],
     "mapCoverage": true,
     "moduleFileExtensions": [
-      "ts",
-      "tsx",
       "js",
-      "json"
+      "json",
+      "ts",
+      "tsx"
     ],
     "transform": {
-      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "src/.*\\.spec\\.(ts|tsx)$",
+    "testMatch": [
+      "**/*.(ts|tsx)"
+    ],
     "collectCoverageFrom": [
       "src/**/*",
       "!src/**/*.spec.*"
@@ -77,6 +85,24 @@
   },
   "prettier": {
     "trailingComma": "all",
-    "singleQuote": true
+    "singleQuote": true,
+    "proseWrap": "always"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "prettier --write",
+      "tslint --fix",
+      "jest --findRelatedTests --passWithNoTests",
+      "git add"
+    ],
+    "readme.md": [
+      "prettier --write",
+      "doctoc --maxlevel 3 --notitle",
+      "git add"
+    ],
+    "*.{json,md}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
