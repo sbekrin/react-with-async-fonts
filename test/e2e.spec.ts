@@ -15,7 +15,7 @@ beforeAll(async () => {
   const app = express();
   app.use(express.static(path.join(__dirname, '__fixtures__')));
   server = app.listen(port);
-  browser = await puppeteer.launch({ headless: false });
+  browser = await puppeteer.launch();
   page = await browser.newPage();
   page.goto(`http://localhost:${port}`);
 });
