@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as T from 'prop-types';
 import FontFaceObserver from 'fontfaceobserver';
-import Cancelable from 'p-cancelable';
+import Cancelable, { PCancelable } from 'p-cancelable';
 import invariant from 'invariant';
 
 export interface Font {
@@ -54,65 +54,90 @@ const getType = value => {
 };
 
 export interface ObserverState {
-  [key: string]: Font | string;
+  [key: string]: Font;
 }
 
 export type ObserverProps = {
-  children: React.ReactElement<any>;
-} & ObserverState;
+  children: Array<React.ReactElement<any>>;
+  text?: string;
+  timeout?: number;
+} & {
+  [key: string]: Font | string;
+};
+
+export interface ObserverContext {
+  __fonts: ObserverState;
+}
 
 class FontObserver extends React.Component<ObserverProps, ObserverState> {
+  static propTypes = {
+    children: T.node,
+    text: T.string,
+    timeout: T.number,
+  };
+
+  static defaultProps = {
+    children: null,
+    text: null,
+    timeout: 3000,
+  };
+
   static childContextTypes = {
     __fonts: T.object,
   };
 
-  promises: Array<
-    Promise<any> & {
-      cancel: () => void;
-      canceled: boolean;
-    }
-  > = [];
+  static contextTypes = {
+    __fonts: T.object,
+  };
+
+  promises: Array<PCancelable<any>> = [];
+
+  state = {};
 
   getChildContext() {
-    return { __fonts: this.state };
+    // Merge fonts contexts
+    const passedDownFonts = this.context.__fonts;
+    const currentFonts = this.state;
+    return { __fonts: { ...passedDownFonts, ...currentFonts } };
   }
 
   componentDidMount() {
-    const { children, ...props } = this.props;
-    // Keep promises to be able cancel them once component unmounts
-    this.promises = Object.keys(props)
-      .map(prop => {
-        // Validate stuff
-        const origValue = props[prop];
-        invariant(
-          isObject(origValue) || isString(origValue),
-          `Expected font prop to be a string or object, received ${getType(
-            origValue,
-          )} instead`,
-        );
-        const value = isObject(origValue) ? origValue : { family: origValue };
-        invariant(
-          isString(value.family) && value.family.length > 0,
-          `Expected font 'family' prop to be a non-empty string, received `,
-        );
-        const { family, ...rest } = value;
-        // Allow cancelling FFO promises
-        return Cancelable.fn(() =>
-          new FontFaceObserver(family, rest).load().then(() => {
-            // Update state once font is ready
-            this.setState({ [prop]: value });
-          }),
-        );
-      })
-      .map(promise =>
-        // Catch errors if promise was canceled
-        promise.catch(
-          reason => (promise.canceled ? null : Promise.reject(reason)),
-        ),
+    const { children, text, timeout, ...props } = this.props;
+    // Keep promises to cancel them once component unmounts
+    this.promises = Object.keys(props).map(prop => {
+      // Validate stuff
+      const origValue = props[prop];
+      invariant(
+        isObject(origValue) || isString(origValue),
+        `Expected font prop to be a string or object, received ${getType(
+          origValue,
+        )} instead`,
       );
+      const value = isObject(origValue) ? origValue : { family: origValue };
+      invariant(
+        isString(value.family) && value.family.length > 0,
+        `Expected font 'family' prop to be a non-empty string, received ${getType(
+          value.family,
+        )} instead`,
+      );
+      const { family, ...rest } = value;
+      // Allow cancelling FFO promises
+      const ffo = new Cancelable((_, resolve, reject) =>
+        new FontFaceObserver(family, rest)
+          .load(text, timeout)
+          .then(resolve, reject),
+      );
+      // Update state once resolved
+      ffo
+        .then(() => this.setState(prev => ({ ...prev, [prop]: value })))
+        .catch(reason => !ffo.canceled && Promise.reject(reason));
+
+      return ffo;
+    });
   }
 
   componentWillUnmount() {
+    // Mark promises as canceled to avoid setState calls when unmounted
     this.promises.forEach(promise => promise.cancel());
   }
 

@@ -6,7 +6,8 @@ cache:
   directories:
     - "node_modules"
 script:
-  - npm test
-  - npm run build
+  - npm run lint
+  - npm run test
+  - npm run e2e
 after_success:
   - npm run coverage

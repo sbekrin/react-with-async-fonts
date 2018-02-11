@@ -5,3 +5,4 @@ lib/
 .vscode/
 .DS_Store
 *.log
+__fixtures__/bundle.js

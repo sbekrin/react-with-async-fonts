@@ -1,8 +1,9 @@
 import * as React from 'react';
 import * as T from 'prop-types';
+import { ObserverContext, ObserverState } from './font-observer';
 
 export interface SubscriberProps {
-  children: ({}) => React.ReactElement<any>;
+  children: (fonts: ObserverState) => React.ReactElement<any>;
 }
 
 class FontSubscriber extends React.Component<SubscriberProps, {}> {
@@ -13,6 +14,8 @@ class FontSubscriber extends React.Component<SubscriberProps, {}> {
   static propTypes = {
     children: T.func.isRequired,
   };
+
+  context: ObserverContext;
 
   render() {
     return this.props.children(this.context.__fonts);

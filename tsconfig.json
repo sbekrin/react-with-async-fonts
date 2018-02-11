@@ -5,5 +5,6 @@
     "lib": ["dom", "es2017"],
     "allowSyntheticDefaultImports": true
   },
-  "exclude": ["node_modules", "lib", "dist", "**/*.spec.ts"]
+  "include": ["src"],
+  "exclude": ["**/*.spec.tsx"]
 }

@@ -1,0 +1,10 @@
+{
+  "setupFiles": ["./.setup.js"],
+  "mapCoverage": true,
+  "moduleFileExtensions": ["js", "json", "ts", "tsx"],
+  "transform": {
+    "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+  },
+  "testMatch": ["<rootDir>/src/**/*.spec.tsx"],
+  "collectCoverageFrom": ["src/**/*", "!src/**/*.spec.*"]
+}

@@ -10,20 +10,22 @@
 > of issues, including canceling promises, better performance, and TS typings.
 
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
-
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-* [Quick Start](#quick-start)
-* [API](#api)
-  * [`FontObserver` component](#fontobserver-component)
-  * [`FontSubscriber` component](#fontsubscriber-component)
-  * [`withFonts` HoC](#withfonts-hoc)
-  * [`Font` type](#font-type)
-* [Examples](#examples)
-  * [Basic with `FontSubscriber`](#basic-with-fontsubscriber)
-  * [Basic with `withFonts`](#basic-with-withfonts)
-  * [With `styled-components`](#with-styled-components)
-* [License](#license)
+
+- [Quick Start](#quick-start)
+- [API](#api)
+  - [`FontObserver` component](#fontobserver-component)
+  - [`FontSubscriber` component](#fontsubscriber-component)
+  - [`withFonts` HoC](#withfonts-hoc)
+  - [`Font` type](#font-type)
+- [Examples](#examples)
+  - [Basic with `FontSubscriber`](#basic-with-fontsubscriber)
+  - [Basic with `withFonts`](#basic-with-withfonts)
+  - [With `styled-components`](#with-styled-components)
+  - [Nested `FontObserver`](#nested-fontobserver)
+  - [Custom `fontfaceobserver` options](#custom-fontfaceobserver-options)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -93,9 +95,11 @@ export default Heading;
 import { FontObserver } from 'react-with-async-fonts';
 ```
 
-| Prop    | Type            | Description                                          |
-| ------- | --------------- | ---------------------------------------------------- |
-| `[key]` | `Font | string` | Font family string or a [`Font` object](#font-type). |
+| Prop      | Type            | Description                                          |
+| --------- | --------------- | ---------------------------------------------------- |
+| `text`    | `string`        | `fontfaceobserver`'s `.load` text options            |
+| `timeout` | `number`        | `fontfaceobserver`'s `.load` timeout options         |
+| `[key]`   | `Font | string` | Font family string or a [`Font` object](#font-type). |
 
 ### `FontSubscriber` component
 
@@ -188,6 +192,9 @@ export default Heading;
 
 ### Basic with `withFonts`
 
+You can use `withFonts` HoC if you want to compose your component. Please note
+it uses same `FontSubscriber` under the hood.
+
 ```js
 import React from 'react';
 import { withFonts } from 'react-with-async-fonts';
@@ -200,6 +207,8 @@ export default withFonts(Heading);
 ```
 
 ### With `styled-components`
+
+Most elegant way of using it with `styled-components` is `withFonts` HoC.
 
 ```js
 import styled from 'styled-components';
@@ -214,6 +223,52 @@ const Heading = styled.h2`
 `;
 
 export default withFonts(Heading);
+```
+
+### Nested `FontObserver`
+
+You can nest `FontObserver` to merge fonts. Children instances overrides parent
+if font with same code was defined.
+
+```js
+import { FontObserver, FontSubscriber } from 'react-with-async-fonts';
+
+const Article = ({ title, children }) => (
+  <FontObserver roboto="Roboto">
+    <FontObserver ptSans="PT Sans">
+      <FontSubscriber>
+        {fonts => (
+          <article>
+            <h1 className={fonts.roboto ? 'roboto' : 'sans-serif'}>{title}</h1>
+            <p className={fonts.ptSans ? 'ptsans' : 'serif'}>{children}</p>
+          </article>
+        )}
+      </FontSubscriber>
+    </FontObserver>
+  </FontObserver>
+);
+
+export default Article;
+```
+
+### Custom `fontfaceobserver` options
+
+You can provide `text` and `timeout` options for
+[`fontfaceobserver`'s .load](https://github.com/bramstein/fontfaceobserver#how-to-use)
+method with same props.
+
+```js
+import { FontObserver, FontSubscriber } from 'react-with-async-fonts';
+
+const Heading = ({ children }) => (
+  <FontObserver text={children} timeout={2500} roboto="Roboto">
+    <FontSubscriber>
+      {fonts => <h1 className={fonts.roboto && 'roboto'}>{children}</h1>}
+    </FontSubscriber>
+  </FontObserver>
+);
+
+export default Heading;
 ```
 
 ## License

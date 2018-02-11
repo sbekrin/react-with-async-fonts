@@ -1,0 +1,6 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FontSubscriber /> only accepts function child 1`] = `
+"Warning: Failed prop type: Invalid prop \`children\` of type \`string\` supplied to \`FontSubscriber\`, expected \`function\`.
+    in FontSubscriber"
+`;
