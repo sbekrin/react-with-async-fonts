@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FontObserver /> validates font props 1`] = `"Expected font prop to be a string or object, received number instead"`;
+
+exports[`<FontObserver /> validates font props 2`] = `"Expected font 'family' prop to be a non-empty string, received array instead"`;
+
+exports[`<FontObserver /> validates font props 3`] = `"Expected font 'family' prop to be a non-empty string, received null instead"`;

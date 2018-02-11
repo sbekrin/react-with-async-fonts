@@ -1,6 +1,7 @@
 {
   "extends": ["tslint:recommended"],
   "rules": {
+    "member-access": false,
     "quotemark": [true, "single", "jsx-double"],
     "interface-name": [true, "never-prefix"],
     "ordered-imports": false,

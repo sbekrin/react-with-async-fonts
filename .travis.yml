@@ -1,12 +1,15 @@
 language: node_js
 node_js:
-  - "7"
-sudo: false
+  - "8"
+sudo: required
+addons:
+  chrome: stable
 cache:
   directories:
-    - "node_modules"
+    - node_modules
 script:
-  - npm test
-  - npm run build
+  - npm run lint
+  - npm run test
+  - npm run e2e
 after_success:
   - npm run coverage
