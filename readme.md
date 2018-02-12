@@ -6,6 +6,8 @@
 [![dependencies Status](https://img.shields.io/david/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://david-dm.org/sergeybekrin/react-with-async-fonts)
 [![devDependencies Status](https://img.shields.io/david/dev/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://david-dm.org/sergeybekrin/react-with-async-fonts?type=dev)
 
+React module for working with async loaded custom web fonts, based on [`fontfaceobserver`](https://fontfaceobserver.com/).
+
 > Note: version 4.x introduces breaking changes with new API. It addresses bunch
 > of issues, including canceling promises, better performance, and TS typings.
 
@@ -99,7 +101,7 @@ import { FontObserver } from 'react-with-async-fonts';
 | --------- | --------------- | ---------------------------------------------------- |
 | `text`    | `string`        | `fontfaceobserver`'s `.load` text options            |
 | `timeout` | `number`        | `fontfaceobserver`'s `.load` timeout options         |
-| `[key]`   | `Font | string` | Font family string or a [`Font` object](#font-type). |
+| `[key]`   | `Font \| string` | Font family string or a [`Font` object](#font-type). |
 
 ### `FontSubscriber` component
 
