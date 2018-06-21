@@ -122,7 +122,7 @@ class FontObserver extends React.Component<ObserverProps, ObserverState> {
       );
       const { family, ...rest } = value;
       // Allow cancelling FFO promises
-      const ffo = new Cancelable((_, resolve, reject) =>
+      const ffo = new Cancelable((resolve, reject) =>
         new FontFaceObserver(family, rest)
           .load(text, timeout)
           .then(resolve, reject),

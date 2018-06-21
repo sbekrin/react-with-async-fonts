@@ -4,7 +4,6 @@ import puppeteer from 'puppeteer';
 import express from 'express';
 import getPort from 'get-port';
 import { Server } from 'http';
-import { FontObserver, FontSubscriber } from '../';
 
 let server: Server;
 let browser: puppeteer.Browser;
