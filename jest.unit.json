@@ -2,7 +2,7 @@
   "setupFiles": ["./.setup.js"],
   "moduleFileExtensions": ["js", "json", "ts", "tsx"],
   "transform": {
-    "^.+\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    "^.+\\.(ts|tsx)$": "ts-jest"
   },
   "testMatch": ["<rootDir>/src/**/*.spec.tsx"],
   "collectCoverageFrom": ["src/**/*", "!src/**/*.spec.*"]
