@@ -1,8 +1,8 @@
 import * as React from 'react';
 import * as T from 'prop-types';
-import FontFaceObserver from 'fontfaceobserver';
-import Cancelable, { PCancelable } from 'p-cancelable';
-import invariant from 'invariant';
+import * as FontFaceObserver from 'fontfaceobserver';
+import * as Cancelable from 'p-cancelable';
+import * as invariant from 'invariant';
 
 export interface Font {
   family: string;
@@ -90,7 +90,7 @@ class FontObserver extends React.Component<ObserverProps, ObserverState> {
     __fonts: T.object,
   };
 
-  promises: Array<PCancelable<any>> = [];
+  promises: Array<Cancelable.PCancelable<any>> = [];
 
   state = {};
 

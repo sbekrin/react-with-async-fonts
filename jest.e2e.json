@@ -3,5 +3,10 @@
   "transform": {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
-  "testMatch": ["<rootDir>/test/**/*.spec.ts"]
+  "testMatch": ["<rootDir>/test/**/*.spec.ts"],
+  "globals": {
+    "ts-jest": {
+      "diagnostics": false
+    }
+  }
 }

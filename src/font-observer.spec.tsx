@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as T from 'prop-types';
-import FontFaceObserver from 'fontfaceobserver';
+import * as FontFaceObserver from 'fontfaceobserver';
 import { shallow, mount } from 'enzyme';
 import { FontObserver } from './index';
 

@@ -1,6 +1,5 @@
 import * as React from 'react';
-import * as T from 'prop-types';
-import hoistStatics from 'hoist-non-react-statics';
+import * as hoistStatics from 'hoist-non-react-statics';
 import FontSubscriber from './font-subscriber';
 
 const h = React.createElement;

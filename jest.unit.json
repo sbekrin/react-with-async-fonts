@@ -5,5 +5,10 @@
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   "testMatch": ["<rootDir>/src/**/*.spec.tsx"],
-  "collectCoverageFrom": ["src/**/*", "!src/**/*.spec.*"]
+  "collectCoverageFrom": ["src/**/*", "!src/**/*.spec.*"],
+  "globals": {
+    "ts-jest": {
+      "diagnostics": false
+    }
+  }
 }
