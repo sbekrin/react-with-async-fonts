@@ -7,7 +7,6 @@
   "module": "./dist/index.js",
   "scripts": {
     "prepublishOnly": "npm run lint && npm run test && npm run e2e && npm run build",
-    "precommit": "lint-staged",
     "prebuild": "rimraf lib/ dist/",
     "build": "npm run build:cjs && npm run build:esm",
     "build:cjs": "tsc -d -t es5 -m commonjs --outDir ./lib",
@@ -31,7 +30,7 @@
     "fontloader",
     "react-fonts"
   ],
-  "author": "Sergey Bekrin <sergey@bekrin.me> (http://bekrin.me)",
+  "author": "Sergey Bekrin <sergey@bekrin.me> (https://bekrin.me)",
   "license": "MIT",
   "dependencies": {
     "fontfaceobserver": "^2.0.13",
@@ -44,30 +43,33 @@
     "react-dom": ">=15"
   },
   "devDependencies": {
-    "@types/jest": "^23.3.2",
-    "@types/react": "^16.4.14",
+    "@types/jest": "^23.3.4",
+    "@types/react": "^16.4.16",
     "coveralls": "^3.0.2",
     "doctoc": "^1.3.1",
-    "enzyme": "^3.6.0",
-    "enzyme-adapter-react-16": "^1.5.0",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
     "express": "^4.16.3",
     "get-port": "^4.0.0",
-    "husky": "^1.0.1",
+    "husky": "^1.1.1",
     "jest": "^23.6.0",
     "lint-staged": "^7.3.0",
     "prettier": "^1.14.3",
     "prop-types": "^15.6.2",
-    "puppeteer": "^1.8.0",
+    "puppeteer": "^1.9.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-test-renderer": "^16.5.2",
     "rimraf": "^2.6.2",
-    "ts-jest": "^23.10.2",
+    "ts-jest": "^23.10.4",
     "ts-loader": "^5.2.1",
     "tslint": "^5.11.0",
     "typescript": "^3.1.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
+  },
+  "husky": {
+    "pre-commit": "lint-staged"
   },
   "prettier": {
     "trailingComma": "all",
