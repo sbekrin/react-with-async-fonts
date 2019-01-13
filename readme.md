@@ -1,9 +1,9 @@
 # react-with-async-fonts
 
 [![npm Version](https://img.shields.io/npm/v/react-with-async-fonts.svg?maxAge=0)](https://www.npmjs.com/package/react-with-async-fonts)
-[![Build Status](https://img.shields.io/travis/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://travis-ci.org/sergeybekrin/react-with-async-fonts)
-[![Coverage Status](https://img.shields.io/coveralls/sergeybekrin/react-with-async-fonts.svg?maxAge=0)](https://coveralls.io/github/sergeybekrin/react-with-async-fonts?branch=master)
-[![Greenkeeper badge](https://badges.greenkeeper.io/sergeybekrin/react-with-async-fonts.svg)](https://greenkeeper.io/)
+[![Build Status](https://img.shields.io/travis/sbekrin/react-with-async-fonts.svg?maxAge=0)](https://travis-ci.org/sbekrin/react-with-async-fonts)
+[![Coverage Status](https://img.shields.io/coveralls/sbekrin/react-with-async-fonts.svg?maxAge=0)](https://coveralls.io/github/sbekrin/react-with-async-fonts?branch=master)
+[![Greenkeeper badge](https://badges.greenkeeper.io/sbekrin/react-with-async-fonts.svg)](https://greenkeeper.io/)
 
 React module for working with async loaded custom web fonts, based on [`fontfaceobserver`](https://fontfaceobserver.com/).
 
