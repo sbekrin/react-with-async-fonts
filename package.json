@@ -36,7 +36,7 @@
     "fontfaceobserver": "^2.0.13",
     "hoist-non-react-statics": "^3.0.1",
     "invariant": "^2.2.4",
-    "p-cancelable": "^0.5.0"
+    "p-cancelable": "^1.1.0"
   },
   "peerDependencies": {
     "react": ">=15",
